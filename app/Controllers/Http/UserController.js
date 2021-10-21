@@ -5,8 +5,13 @@ class UserController {
   async create({ request, response }) {
     try {
       const erroMessage = {
-        "username.required": "Esse campo é obrigatório",
+        "username.required": "É necessário informar um nome de usuário",
         "username.unique": "Esse usuário ja existe",
+        "username.min": "É preciso ter mais de 5 caracteres no nome de usuário",
+        "email.required": "É necessário informar um email",
+        "email.min": "É preciso ter mais de 5 caracteres no campo de email",
+        "email.unique": "Esse email ja esta cadastrado",
+        "password.required": "A senha precisa ter ao menos 6 digitos",
       };
 
       const validation = await validateAll(
