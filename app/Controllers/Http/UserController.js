@@ -4,11 +4,20 @@ const { validateAll } = use("Validator");
 class UserController {
   async create({ request, response }) {
     try {
-      const validation = await validateAll(request.all(), {
-        username: "required|min:5|unique:users",
-        email: "required|email|unique:users",
-        password: "required|min:6",
-      });
+      const erroMessage = {
+        "username.required": "Esse campo é obrigatório",
+        "username.unique": "Esse usuário ja existe",
+      };
+
+      const validation = await validateAll(
+        request.all(),
+        {
+          username: "required|min:5|unique:users",
+          email: "required|email|unique:users",
+          password: "required|min:6",
+        },
+        erroMessage
+      );
 
       if (validation.fails()) {
         return response.status(401).send({ message: validation.messages() });
