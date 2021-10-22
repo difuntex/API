@@ -57,7 +57,22 @@ class ProdutoController {
     }
   }
 
-  async update({ params, request, response }) {}
+  async update({ params, request, response }) {
+    try {
+      const data = request.all();
+      let produto = await Produto.findByOrFail("id", params.id);
+      let produtoAtualizado = {
+        nome: data.nome,
+        descricao: data.descricao,
+        preco: data.preco,
+      };
+      produto.merge(produtoAtualizado);
+      await produto.save();
+      return "Produto atualizado com sucesso!";
+    } catch (error) {
+      return response.status(500).send({ error: `Erro: ${error.message}` });
+    }
+  }
 
   async destroy({ params, request, response }) {}
 }

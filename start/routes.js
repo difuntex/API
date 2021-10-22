@@ -6,3 +6,5 @@ Route.post("/user", "UserController.store");
 Route.post("/login", "UserController.login");
 Route.post("/produtos", "ProdutoController.store");
 Route.get("/produtos", "ProdutoController.index");
+Route.get("/busca_produtos", "ProdutoController.show");
+Route.put("/produtos/:id", "ProdutoController.update");
