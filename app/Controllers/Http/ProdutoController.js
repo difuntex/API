@@ -20,7 +20,7 @@ class ProdutoController {
       const errorMessage = {
         "nome.required": "É preciso informar o nome do produto",
         "nome.min": "Nome inválido",
-        "descircao.required": "É preciso informar a descirção do produto",
+        "descricao.required": "É preciso informar a descrição do produto",
         "preco.required": "É preciso informar o preço do produto",
       };
       const validation = await validateAll(
@@ -44,9 +44,18 @@ class ProdutoController {
     }
   }
 
-  async show({ params, request, response, view }) {}
-
-  async edit({ params, request, response, view }) {}
+  async show({ request, response }) {
+    try {
+      let requisicao = request.only(["nome"]);
+      let data = await Database.raw(
+        `SELECT nome,descricao,preco FROM produtos WHERE nome LIKE '%${requisicao.nome}%'`
+      );
+      data = data.rows;
+      return data;
+    } catch (error) {
+      return response.status(500).send({ error: `Erro: ${error.message}` });
+    }
+  }
 
   async update({ params, request, response }) {}
 
