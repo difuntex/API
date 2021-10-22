@@ -2,9 +2,9 @@
 const User = use("App/Models/User");
 const { validateAll } = use("Validator");
 class UserController {
-  async create({ request, response }) {
+  async store({ request, response }) {
     try {
-      const erroMessage = {
+      const errorMessage = {
         "username.required": "É necessário informar um nome de usuário",
         "username.unique": "Esse usuário ja existe",
         "username.min": "É preciso ter mais de 5 caracteres no nome de usuário",
@@ -21,7 +21,7 @@ class UserController {
           email: "required|email|unique:users",
           password: "required|min:6",
         },
-        erroMessage
+        errorMessage
       );
 
       if (validation.fails()) {

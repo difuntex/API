@@ -1,93 +1,45 @@
-'use strict'
-
-/** @typedef {import('@adonisjs/framework/src/Request')} Request */
-/** @typedef {import('@adonisjs/framework/src/Response')} Response */
-/** @typedef {import('@adonisjs/framework/src/View')} View */
-
-/**
- * Resourceful controller for interacting with produtos
- */
+"use strict";
+const Produto = use("App/Models/Produto");
+const { validateAll } = use("Validator");
 class ProdutoController {
-  /**
-   * Show a list of all produtos.
-   * GET produtos
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
+  async index({ request, response, view }) {}
+
+  async store({ request, response }) {
+    try {
+      const errorMessage = {
+        "nome.required": "É preciso informar o nome do produto",
+        "nome.min": "Nome inválido",
+        "descircao.required": "É preciso informar a descirção do produto",
+        "preco.required": "É preciso informar o preço do produto",
+      };
+      const validation = await validateAll(
+        request.all(),
+        {
+          nome: "required|min:2",
+          descricao: "required",
+          preco: "required",
+        },
+        errorMessage
+      );
+
+      if (validation.fails()) {
+        return response.status(401).send({ message: validation.messages() });
+      }
+      const data = request.only(["nome", "descricao", "preco"]);
+      const produto = await Produto.create(data);
+      return produto;
+    } catch (error) {
+      return response.status(500).send({ error: `Erro: ${error.message}` });
+    }
   }
 
-  /**
-   * Render a form to be used for creating a new produto.
-   * GET produtos/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
-  }
+  async show({ params, request, response, view }) {}
 
-  /**
-   * Create/save a new produto.
-   * POST produtos
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
-  }
+  async edit({ params, request, response, view }) {}
 
-  /**
-   * Display a single produto.
-   * GET produtos/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
-  }
+  async update({ params, request, response }) {}
 
-  /**
-   * Render a form to update an existing produto.
-   * GET produtos/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
-
-  /**
-   * Update produto details.
-   * PUT or PATCH produtos/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
-
-  /**
-   * Delete a produto with id.
-   * DELETE produtos/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
-  }
+  async destroy({ params, request, response }) {}
 }
 
-module.exports = ProdutoController
+module.exports = ProdutoController;

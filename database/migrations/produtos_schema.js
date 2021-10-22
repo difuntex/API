@@ -11,7 +11,7 @@ class ProdutosSchema extends Schema {
       table.string("nome").notNullable();
       table.string("descricao").notNullable();
       table.float("preco").notNullable();
-      table.integer("vendendo").notNullable();
+      table.integer("vendendo").notNullable().default(1);
     });
   }
 
