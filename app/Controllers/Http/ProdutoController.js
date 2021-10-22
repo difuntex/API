@@ -6,7 +6,7 @@ class ProdutoController {
   async index({ response }) {
     try {
       let produtos = await Database.raw(
-        "SELECT nome, descricao, preco FROM produtos WHERE vendendo  = 1"
+        "SELECT id, nome, descricao, preco FROM produtos WHERE vendendo  = 1"
       );
       produtos = produtos.rows;
       return produtos;
@@ -74,7 +74,14 @@ class ProdutoController {
     }
   }
 
-  async destroy({ params, request, response }) {}
+  async destroy({ params, response }) {
+    try {
+      await Produto.query().where("id", params.id).delete();
+      return "Produto excluido com sucesso";
+    } catch (error) {
+      return response.status(500).send({ error: `Erro: ${error.message}` });
+    }
+  }
 }
 
 module.exports = ProdutoController;
