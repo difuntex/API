@@ -1,8 +1,19 @@
 "use strict";
 const Produto = use("App/Models/Produto");
 const { validateAll } = use("Validator");
+const Database = use("Database");
 class ProdutoController {
-  async index({ request, response, view }) {}
+  async index({ response }) {
+    try {
+      let produtos = await Database.raw(
+        "SELECT nome, descricao, preco FROM produtos WHERE vendendo  = 1"
+      );
+      produtos = produtos.rows;
+      return produtos;
+    } catch (error) {
+      return response.status(500).send({ error: `Erro: ${error.message}` });
+    }
+  }
 
   async store({ request, response }) {
     try {
