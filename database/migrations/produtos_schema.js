@@ -10,8 +10,8 @@ class ProdutosSchema extends Schema {
       table.timestamps();
       table.string("nome").notNullable();
       table.string("descricao").notNullable();
-      table.float("preco").notNullable();
       table.integer("vendendo").notNullable().default(1);
+      table.float("preco").notNullable();
     });
   }
 
