@@ -6,7 +6,7 @@ class DeliveryController {
   async index({ response }) {
     try {
       let deliveries = await Database.raw(
-        "SELECT nome_cliente, endereco FROM deliveries WHERE entregue = 0 "
+        "SELECT nome_cliente, endereco, valor, troco FROM deliveries WHERE entregue = 0 ORDER BY created_at ASC "
       );
       deliveries = deliveries.rows;
       return deliveries;
@@ -62,16 +62,20 @@ class DeliveryController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit({ params, request, response, view }) {}
+  async entrega({ params, response }) {
+    try {
+      let delivery = await Delivery.findBy("id", params.id);
+      const entregue = {
+        entregue: 1,
+      };
+      delivery.merge(entregue);
+      await delivery.save();
+      return "Entrega marcada como ja efetuada, com sucesso!";
+    } catch (error) {
+      return response.status(500).send({ error: `Erro: ${error.message}` });
+    }
+  }
 
-  /**
-   * Update delivery details.
-   * PUT or PATCH deliveries/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
   async update({ params, request, response }) {}
 
   /**
