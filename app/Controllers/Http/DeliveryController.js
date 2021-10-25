@@ -2,6 +2,7 @@
 const Delivery = use("App/Models/Delivery");
 const { validateAll } = use("Validator");
 const Database = use("Database");
+const { isAdminHelper } = use("App/Helpers");
 class DeliveryController {
   async index({ response }) {
     try {
@@ -15,8 +16,11 @@ class DeliveryController {
     }
   }
 
-  async store({ request, response }) {
+  async store({ request, response, auth }) {
     try {
+      const user = await auth.getUser();
+      const verify = await isAdminHelper(user);
+      if (!verify) return response.status(401).send("Usuário sem permissão");
       const errorMessage = {
         "nome_cliente.required": "É preciso informar o nome do cliente",
         "endereco.required": "É preciso informar o endereço",
@@ -51,19 +55,9 @@ class DeliveryController {
     }
   }
 
-  async show({ params, request, response, view }) {}
-
-  /**
-   * Render a form to update an existing delivery.
-   * GET deliveries/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async entrega({ params, response }) {
+  async entrega({ params, response, auth }) {
     try {
+      const user = await auth.getUser();
       let delivery = await Delivery.findBy("id", params.id);
       const entregue = {
         entregue: 1,
@@ -76,16 +70,11 @@ class DeliveryController {
     }
   }
 
-  async update({ params, request, response }) {}
-
-  /**
-   * Delete a delivery with id.
-   * DELETE deliveries/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
+  async update({ params, request, response }) {
+    try {
+      const data = request.all();
+    } catch (error) {}
+  }
   async destroy({ params, request, response }) {}
 }
 
