@@ -13,6 +13,21 @@ const isAdminHelper = async (user) => {
     }
   });
 };
+const isSalesmanHelper = async (user) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (user.profile) {
+        if (user.profile != 2) {
+          resolve(false);
+        }
+      }
+      resolve(true);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   isAdminHelper,
+  isSalesmanHelper,
 };

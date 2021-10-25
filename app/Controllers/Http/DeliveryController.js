@@ -3,6 +3,7 @@ const Delivery = use("App/Models/Delivery");
 const { validateAll } = use("Validator");
 const Database = use("Database");
 const { isAdminHelper } = use("App/Helpers");
+const { isSalesmanHelper } = use("App/Helpers");
 class DeliveryController {
   async index({ response }) {
     try {
@@ -19,7 +20,7 @@ class DeliveryController {
   async store({ request, response, auth }) {
     try {
       const user = await auth.getUser();
-      const verify = await isAdminHelper(user);
+      const verify = await isSalesmanHelper(user);
       if (!verify) return response.status(401).send("Usuário sem permissão");
       const errorMessage = {
         "nome_cliente.required": "É preciso informar o nome do cliente",
