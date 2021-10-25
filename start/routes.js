@@ -10,3 +10,4 @@ Route.get("/busca_produtos", "ProdutoController.show");
 Route.put("/produtos/:id", "ProdutoController.update");
 Route.delete("/produtos/:id", "ProdutoController.destroy");
 Route.get("/deliveries", "DeliveryController.index");
+Route.post("/deliveries", "DeliveryController.store");
