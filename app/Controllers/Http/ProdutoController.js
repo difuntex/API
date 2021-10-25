@@ -2,6 +2,8 @@
 const Produto = use("App/Models/Produto");
 const { validateAll } = use("Validator");
 const Database = use("Database");
+const { isAdminHelper } = use("App/Helpers");
+
 class ProdutoController {
   async index({ response }) {
     try {
@@ -15,27 +17,22 @@ class ProdutoController {
     }
   }
 
-  async store({ request, response }) {
+  async store({ request, response, auth }) {
     try {
-      const errorMessage = {
-        "nome.required": "É preciso informar o nome do produto",
-        "nome.min": "Nome inválido",
-        "descricao.required": "É preciso informar a descrição do produto",
-        "preco.required": "É preciso informar o preço do produto",
-      };
+      const user = await auth.getUser();
+      const verify = await isAdminHelper(user);
+      if (!verify) return response.status(401).send("Usuário sem permissão");
+      /*console.log(ProdutoValidator.rules());
+
       const validation = await validateAll(
         request.all(),
-        {
-          nome: "required|min:2",
-          descricao: "required",
-          preco: "required",
-        },
-        errorMessage
+        await ProdutoValidator.rules(),
+        await ProdutoValidator.messages()
       );
 
       if (validation.fails()) {
         return response.status(401).send({ message: validation.messages() });
-      }
+      }*/
       const data = request.only(["nome", "descricao", "preco"]);
       const produto = await Produto.create(data);
       return produto;

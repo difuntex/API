@@ -2,7 +2,6 @@
 const Delivery = use("App/Models/Delivery");
 const { validateAll } = use("Validator");
 const Database = use("Database");
-const { isAdminHelper } = use("App/Helpers");
 const { isSalesmanHelper } = use("App/Helpers");
 class DeliveryController {
   async index({ response }) {
