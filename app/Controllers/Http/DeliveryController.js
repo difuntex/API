@@ -6,6 +6,12 @@ const { is } = use("App/Helpers");
 class DeliveryController {
   async index({ response }) {
     try {
+      const user = await auth.getUser();
+      const verify = await is(user, "salesman");
+      if (!verify) {
+        const verify = await is(user, "admin");
+        if (!verify) return response.status(401).send("Usuário sem permissão");
+      }
       let deliveries = await Database.raw(
         "SELECT nome_cliente, endereco, valor, troco FROM deliveries WHERE entregue = 0 ORDER BY created_at ASC "
       );
@@ -20,27 +26,11 @@ class DeliveryController {
     try {
       const user = await auth.getUser();
       const verify = await is(user, "salesman");
-      if (!verify) return response.status(401).send("Usuário sem permissão");
-      const errorMessage = {
-        "nome_cliente.required": "É preciso informar o nome do cliente",
-        "endereco.required": "É preciso informar o endereço",
-        "valor.required": "É preciso informar o valor da entrega",
-        "cartao.required":
-          "É preciso informar se o pagamento será efetuado  através do uso de cartão",
-      };
-      const validation = await validateAll(
-        request.all(),
-        {
-          nome_cliente: "required",
-          endereco: "required",
-          valor: "required",
-          cartao: "required",
-        },
-        errorMessage
-      );
-      if (validation.fails()) {
-        return response.status(401).send({ message: validation.messages() });
+      if (!verify) {
+        const verify = await is(user, "admin");
+        if (!verify) return response.status(401).send("Usuário sem permissão");
       }
+
       const data = request.only([
         "nome_cliente",
         "endereco",
@@ -58,6 +48,11 @@ class DeliveryController {
   async entrega({ params, response, auth }) {
     try {
       const user = await auth.getUser();
+      const verify = await is(user, "salesman");
+      if (!verify) {
+        const verify = await is(user, "admin");
+        if (!verify) return response.status(401).send("Usuário sem permissão");
+      }
       let delivery = await Delivery.findBy("id", params.id);
       const entregue = {
         entregue: 1,

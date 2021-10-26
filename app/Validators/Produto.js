@@ -10,11 +10,13 @@ class Produto {
   }
   get messages() {
     return {
-      "nome.required": "É preciso informar o nome do produto",
+      //required: "Campo Faltando",
+      "nome.required:": "É preciso informar o nome do produto",
       "nome.min": "Nome inválido",
       "descricao.required": "É preciso informar a descrição do produto",
       "preco.required": "É preciso informar o preço do produto",
     };
   }
 }
+
 module.exports = Produto;
