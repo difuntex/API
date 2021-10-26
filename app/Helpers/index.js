@@ -1,33 +1,29 @@
 "use strict";
-const isAdminHelper = async (user) => {
+const is = async (user, type) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (user.profile) {
-        if (user.profile != 1) {
-          resolve(false);
-        }
+      switch (user.profile) {
+        case 1:
+          if (type === "admin") {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+          break;
+        case 2:
+          if (type === "salesman") {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+          break;
       }
-      resolve(true);
     } catch (e) {
       reject(e);
     }
   });
 };
-const isSalesmanHelper = async (user) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (user.profile) {
-        if (user.profile != 2) {
-          resolve(false);
-        }
-      }
-      resolve(true);
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
+
 module.exports = {
-  isAdminHelper,
-  isSalesmanHelper,
+  is,
 };

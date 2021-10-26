@@ -2,7 +2,7 @@
 const Produto = use("App/Models/Produto");
 const { validateAll } = use("Validator");
 const Database = use("Database");
-const { isAdminHelper } = use("App/Helpers");
+const { is } = use("App/Helpers");
 
 class ProdutoController {
   async index({ response }) {
@@ -20,7 +20,7 @@ class ProdutoController {
   async store({ request, response, auth }) {
     try {
       const user = await auth.getUser();
-      const verify = await isAdminHelper(user);
+      const verify = await is(user, "admin");
       if (!verify) return response.status(401).send("Usuário sem permissão");
       /*console.log(ProdutoValidator.rules());
 
