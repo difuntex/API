@@ -1,6 +1,6 @@
 "use strict";
-
-class Delivery {
+const Validator = use("App/Validators/Validator");
+class Delivery extends Validator {
   get rules() {
     return {
       nome_cliente: "required",

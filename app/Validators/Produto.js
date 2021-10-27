@@ -1,6 +1,7 @@
 "use strict";
+const Validator = use("App/Validators/Validator");
 
-class Produto {
+class Produto extends Validator {
   get rules() {
     return {
       nome: "required|min:2",
